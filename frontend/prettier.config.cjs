@@ -1,0 +1,20 @@
+module.exports = {
+  plugins: ['@ianvs/prettier-plugin-sort-imports'],
+  importOrder: [
+    '^react$',
+    '<THIRD_PARTY_MODULES>',
+    '',
+    '^~/app(.*)$',
+    '^~/pages(.*)$',
+    '^~/widgets(.*)$',
+    '^~/features(.*)$',
+    '^~/entities(.*)$',
+    '^~/shared(.*)$',
+    '^~/assets(.*)$',
+    '',
+    '^[./]',
+  ],
+  singleQuote: true,
+  printWidth: 80,
+  bracketSpacing: false,
+};
