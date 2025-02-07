@@ -7,22 +7,26 @@ import {Swiper, SwiperClass, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 
 import {Book} from '~/entities';
-import {colors} from '~/shared/theme';
+import {changeTheme, colors} from '~/shared/theme';
 
-const Wrapper = styled.div`
+import {generateRandomHexColor} from './utils';
+
+const Wrapper = styled.div<{themeColor: typeof colors}>`
   width: 100%;
   height: 100vh;
-  background-color: ${colors.bg};
+  background-color: ${({themeColor}) => themeColor.bg};
   padding: 25px;
+  transition: all 0.3s ease-in-out;
 `;
 
-const StyledSwiper = styled(Swiper)`
+const StyledSwiper = styled(Swiper)<{themeColor: typeof colors}>`
   height: 100%;
   max-width: 520px;
   min-width: 425px;
-  background-color: ${colors.primary};
+  background-color: ${({themeColor}) => themeColor.primary};
   border-radius: 20px;
   padding: 25px;
+  transition: all 0.3s ease-in-out;
 `;
 
 const StyledSwiperSlide = styled(SwiperSlide)`
@@ -58,7 +62,6 @@ export const TokSlider: FC<TokSliderProps> = ({
 
   useEffect(() => {
     if (swiper && books.length > 0 && activeIndex === books.length - 2) {
-      console.log('Fetching next page...');
       fetchNextPage();
     }
   }, [activeIndex, books.length, fetchNextPage, swiper]);
@@ -68,7 +71,7 @@ export const TokSlider: FC<TokSliderProps> = ({
   }, [books]);
 
   return (
-    <Wrapper>
+    <Wrapper themeColor={colors}>
       <StyledSwiper
         spaceBetween={25}
         slidesPerView={1}
@@ -80,11 +83,17 @@ export const TokSlider: FC<TokSliderProps> = ({
 
           if (onSlideChange) {
             onSlideChange(swiper.activeIndex);
+            changeTheme({
+              secondary: generateRandomHexColor(),
+              primary: generateRandomHexColor(),
+              bg: generateRandomHexColor(),
+            });
           }
         }}
         mousewheel
         keyboard
         modules={[Keyboard, Mousewheel]}
+        themeColor={colors}
       >
         {isLoading && <StyledSwiperSlide>Loading...</StyledSwiperSlide>}
         {!isLoading &&
