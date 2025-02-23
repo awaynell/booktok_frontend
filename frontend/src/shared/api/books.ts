@@ -6,7 +6,7 @@ export const booksAPI = {
   getBooks: async ({page = 1}): Promise<{books: Book[]; nextPage?: number}> => {
     const limit = 5;
     const {data} = await openLibraryApiClient.get(
-      `/search.json?lang=rus&q=q&page=${page}&limit=${limit}`,
+      `/search.json?q=q&page=${page}&limit=${limit}&sort=random`,
     );
 
     const books = data.docs.filter((book: Book) => book?.cover_i);

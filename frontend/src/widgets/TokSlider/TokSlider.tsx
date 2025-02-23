@@ -38,6 +38,9 @@ const StyledSwiperSlide = styled(SwiperSlide)`
   background-color: transparent;
   border-radius: 10px;
   margin: 0 auto;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 -2px 4px rgba(255, 255, 255, 0.5);
 
   img {
     border-radius: 20px;
