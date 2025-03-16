@@ -10,6 +10,12 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
+  runtimeConfig: {
+    public: {
+      apiUrl: "https://openlibrary.org",
+    },
+  },
+
   modules: [
     "@nuxt/image",
     [

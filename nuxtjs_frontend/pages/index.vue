@@ -4,7 +4,7 @@
   >
     <!-- Левая панель -->
     <div
-      class="p-5 h-full overflow-auto flex-shrink-0 w-1/4 border-r border-secondary bg-bg"
+      class="p-5 h-full overflow-auto flex-shrink-0 w-1/4 border-r border-secondary bg-bg max-sm:hidden"
     >
       <div class="sticky top-0 z-100 bg-bg">
         <h1 class="text-5xl mb-0 z-50 text-primary font-bold">БукТок</h1>
@@ -33,7 +33,7 @@
 
     <!-- Правая панель -->
     <div
-      class="p-5 h-full overflow-auto flex-shrink-0 w-1/4 border-l border-secondary bg-bg"
+      class="p-5 h-full overflow-auto flex-shrink-0 w-1/4 border-l border-secondary bg-bg max-sm:hidden"
     >
       <h1 class="text-5xl mb-0 text-primary">
         {{ allBooks[activeIndex]?.title }}
@@ -51,42 +51,27 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useInfiniteQuery } from "@tanstack/vue-query";
-
 import { booksAPI } from "~/api/books";
-import { all } from "axios";
+import { type Book } from "~/types/books.types";
 
 const activeIndex = ref(0);
 
-const { data, fetchNextPage, isLoading } = useInfiniteQuery({
-  queryKey: ["books"],
-  initialPageParam: 1,
-  queryFn: ({ pageParam = 1 }) => booksAPI.getBooks({ page: pageParam }),
-  getNextPageParam: (lastPage) => lastPage.nextPage,
+const allBooks = reactive<Book[]>([]);
+const page = ref(1);
+const limit = 5;
+
+const { refresh, isLoading } = await booksAPI.getBooksV2(page, limit, allBooks);
+
+async function fetchNextPage() {
+  page.value += 1;
+  await refresh();
+}
+
+onMounted(async () => {
+  await booksAPI.getBooksV2(page, limit, allBooks);
 });
-
-const allBooks = computed(
-  () => data.value?.pages.flatMap((page) => page.books) || []
-);
-
-console.log(allBooks.value);
 
 const handleSlideChange = (index: number) => {
   activeIndex.value = index;
 };
 </script>
-
-<!-- <style>
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-primary rounded-xl;
-  transition: all 0.3s ease-in-out;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-secondary;
-}
-</style> -->
