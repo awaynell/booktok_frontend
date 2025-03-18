@@ -1,6 +1,7 @@
 import type { Book } from "~/types/books.types";
 import { openLibraryApiClient } from "./apiClient";
 import { type Reactive, type Ref } from "vue";
+import type { AsyncDataRequestStatus } from "#app";
 
 export const booksAPI = {
   getBooks: async ({
@@ -21,12 +22,12 @@ export const booksAPI = {
     items: Reactive<Book[]>
   ): Promise<{
     refresh: (opts?: Record<string, any>) => Promise<void>;
-    isLoading: boolean;
+    status: Ref<AsyncDataRequestStatus, AsyncDataRequestStatus>;
   }> => {
     const config = useRuntimeConfig();
     console.log({ baseUrl: config.public.apiUrl });
-    const { data, error, refresh, status } = await useAsyncData(
-      "books",
+    const { error, refresh, status, pending } = await useAsyncData(
+      `books:${Date.now()}`,
       () =>
         $fetch("/search.json", {
           baseURL: config.public.apiUrl,
@@ -37,16 +38,18 @@ export const booksAPI = {
             q: "q",
             land: "rus",
           },
-          key: `items-page-${page.value}`, // Уникальный ключ для кэширования каждой страницы
           onResponse: ({ response }) => {
             if (response.ok) {
-              const books = response._data.docs;
+              const books = response._data.docs.filter(
+                (book: Book) => book.cover_i
+              );
 
               items.push(...books);
             }
           },
         }),
       {
+        watch: [page],
         getCachedData(key, nuxt) {
           return null;
         },
@@ -59,7 +62,7 @@ export const booksAPI = {
 
     return {
       refresh,
-      isLoading: status.value === "pending",
+      status,
     };
   },
 };

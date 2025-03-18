@@ -7,6 +7,8 @@ export const createDraggable = (
   swiper: SwiperClass,
   onSwipe?: (direction: "left" | "right") => void
 ) => {
+  gsap.registerPlugin(Draggable);
+
   const element = document.querySelector(
     `#book_slide_${index}`
   ) as HTMLDivElement;
