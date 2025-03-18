@@ -1,5 +1,5 @@
 # Используем официальный образ Node.js (например, alpine-версия для легкости)
-FROM node:16-alpine
+FROM node:20-alpine
 
 # Задаём рабочую директорию в контейнере
 WORKDIR /app
@@ -20,4 +20,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Запускаем приложение
-CMD ["npm", "start"]
+CMD ["node", ".output/server/index.mjs"]
