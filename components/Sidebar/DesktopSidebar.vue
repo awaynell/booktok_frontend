@@ -1,0 +1,58 @@
+<template>
+  <div
+    :class="
+      cn(
+        {
+          'translate-x-0 opacity-100': store.isOpen,
+          '-translate-x-[-9999px] opacity-0 absolute left-[1408px]':
+            !store.isOpen,
+        },
+        'w-3/12 h-11/12 bg-emerald-900 whitespace-break-spaces max-md:hidden',
+        'transition-all duration-300 ease-in-out',
+        'rounded-2xl p-5 mr-5'
+      )
+    "
+  >
+    <span
+      class="text-5xl mb-0 text-primary cursor-pointer absolute right-0 top-0"
+      @click="store.setSidebarIsOpen(false)"
+    >
+      x
+    </span>
+    <div>
+      <h1 class="text-5xl mb-0 text-primary">Reviews</h1>
+      <div v-for="(review, index) in store.reviews" :key="index" class="mt-2">
+        <div
+          class="flex flex-col gap-2 border border-amber-500 rounded-2xl p-4"
+        >
+          <div class="flex justify-between">
+            <div class="text-primary text-sm">
+              {{ review.user_id }}
+            </div>
+            <div class="text-primary text-xs">
+              {{ review.created_at }}
+            </div>
+          </div>
+          {{ review.text }}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { useSidebarStore } from "~/stores/sidebarStore";
+import { cn } from "~/theme";
+import type { Review } from "~/types/review.types";
+
+const store = useSidebarStore();
+
+const props = defineProps({
+  reviews: {
+    type: Array as () => Review[],
+    required: true,
+  },
+});
+</script>
+
+<style></style>

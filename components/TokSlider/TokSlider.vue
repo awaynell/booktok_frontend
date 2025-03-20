@@ -1,34 +1,25 @@
 <template>
-  <div
-    class="w-full h-screen p-6 transition-all duration-300 ease-in-out"
-    id="container"
+  <swiper
+    class="rounded-xl transition-all duration-300 ease-in-out h-full w-full"
+    :direction="'vertical'"
+    :modules="modules"
+    :slides-per-view="1"
+    :space-between="25"
+    :mousewheel="true"
+    :keyboard="true"
+    @swiper="setSwiper"
+    @slide-change="handleSlideChange"
   >
-    <div class="flex justify-center items-center h-full" v-if="isLoading">
-      <Loader />
-    </div>
-    <swiper
-      class="h-full max-w-[520px] min-w-[425px] rounded-xl p-6 transition-all duration-300 ease-in-out"
-      :direction="'vertical'"
-      :modules="modules"
-      :slides-per-view="1"
-      :space-between="25"
-      :mousewheel="true"
-      :keyboard="true"
-      @swiper="setSwiper"
-      @slide-change="handleSlideChange"
-      v-else
-    >
-      <swiper-slide v-for="(book, i) in books" :key="book.cover_i || i">
-        <Slide
-          :book="book"
-          :idx="i"
-          :swiper-instance="swiperInstance"
-          :active-index="activeIndex"
-          :key="book.cover_i"
-        />
-      </swiper-slide>
-    </swiper>
-  </div>
+    <swiper-slide v-for="(book, i) in books" :key="book.cover_i || i">
+      <Slide
+        :book="book"
+        :idx="i"
+        :swiper-instance="swiperInstance"
+        :active-index="activeIndex"
+        :key="book.cover_i"
+      />
+    </swiper-slide>
+  </swiper>
 </template>
 
 <script setup lang="ts">
@@ -42,7 +33,6 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
 import type { Book } from "~/types/books.types";
-import Loader from "~/components/Loader/index.vue";
 import Slide from "./ui/Slide.vue";
 import { createDraggable } from "./utils/createDraggable";
 

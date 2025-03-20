@@ -18,7 +18,7 @@ export const createDraggable = (
 
   Draggable.create(element, {
     type: "x",
-    inertia: true,
+    inertia: false,
     bounds: {
       minX: -window.innerWidth * 0.8,
       maxX: window.innerWidth * 0.8,

@@ -16,15 +16,12 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    "@nuxt/image",
-    [
-      "@nuxtjs/google-fonts",
-      {
-        families: {
-          Jost: true,
-        },
+  modules: ["@nuxt/image", [
+    "@nuxtjs/google-fonts",
+    {
+      families: {
+        Jost: true,
       },
-    ],
-  ],
+    },
+  ], "@pinia/nuxt"],
 });

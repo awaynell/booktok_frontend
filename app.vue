@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-slate-900 w-screen h-screen font-['Jost']">
+  <div class="font-['Jost'] overflow-x-hidden">
     <NuxtPage />
   </div>
 </template>

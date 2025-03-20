@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-[95%] shadow-2xl relative rounded-xl border-2 border-gray-200 overflow-hidden"
+    class="h-full relative rounded-xl border-2 border-gray-200 overflow-hidden"
     :id="`book_slide_${idx}`"
   >
     <template v-if="book.cover_i">
@@ -37,6 +37,7 @@
     <div
       class="absolute right-2 top-1/2 z-20 p-2 cursor-pointer"
       v-if="imgLoadedState[book.cover_i]"
+      @click="slideOnClick"
     >
       <CommentIcon />
     </div>
@@ -52,6 +53,7 @@ import { type Book } from "~/types/books.types";
 import { shakeSlide } from "../utils/shakeSlide";
 import BookInfo from "./BookInfo.vue";
 import CommentIcon from "~/components/Icons/CommentIcon.vue";
+import { useSidebarStore } from "~/stores/sidebarStore";
 
 const props = defineProps({
   swiperInstance: { type: Swiper, required: true },
@@ -59,6 +61,12 @@ const props = defineProps({
   book: { type: Object as PropType<Book>, required: true },
   idx: { type: Number, required: true },
 });
+
+const store = useSidebarStore();
+
+const slideOnClick = () => {
+  store.setSidebarIsOpen(!store.isOpen);
+};
 
 const { swiperInstance, activeIndex, book, idx } = props;
 
@@ -74,7 +82,6 @@ const shake = () => {
 const imgLoadHandler = (coverId: number) => {
   if (!coverId) return;
 
-  console.log(coverId);
   nextTick(() => {
     imgLoadedState[coverId] = true;
     // if (swiperInstance.activeIndex === 0 && !firstImgIsLoaded.value) {

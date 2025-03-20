@@ -1,12 +1,13 @@
 <template>
   <div
-    class="relative w-screen h-screen flex transition-all duration-300 ease-in-out bg-orange-800 text-white"
+    :class="cn('relative h-screen flex transition-all duration-300 ease-in-out',
+     'text-white items-center gap-10 bg-emerald-700', 'max-md:w-full')" 
   >
     <!-- Левая панель -->
     <div
-      class="p-5 h-full overflow-auto flex-shrink-0 w-1/4 border-r border-secondary bg-green-900 max-sm:hidden"
+      class="rounded-xl p-5 h-11/12 overflow-hidden w-3/12 bg-green-900 max-sm:hidden transition-all duration-300 ease-in-out ml-5"
     >
-      <div class="sticky top-0 z-100 bg-bg">
+      <div class="bg-bg">
         <h1 class="text-5xl mb-0 z-50 text-primary font-bold">БукТок</h1>
         <h1
           v-if="status === 'success' || status === 'pending'"
@@ -17,8 +18,6 @@
       </div>
       <div class="flex flex-col gap-5 mt-12">
         <div
-          v-for="(ad, index) in 2"
-          :key="index"
           class="w-[300px] h-[275px] rounded-lg bg-secondary text-primary flex items-center justify-center text-center"
         >
           Тут могла быть ваша реклама
@@ -27,35 +26,24 @@
     </div>
 
     <!-- Слайдер -->
-    <div class="w-full h-full flex justify-center items-center">
+    <div :class="cn('flex w-5/12 h-11/12 transition-all duration-300 ease-in-out', 
+      'max-md:w-full max-md:mr-2 max-md:ml-2'
+    )""> 
       <div v-if="status === 'idle'">
         <Loader />
       </div>
-
-      <TokSlider
-        :books="allBooks"
-        :fetch-next-page="fetchNextPage"
-        @slide-change="handleSlideChange"
-        :class="cn({ 'opacity-0': status === 'idle' })"
-      />
-    </div>
-
-    <!-- Правая панель -->
-    <div
-      class="p-5 h-full overflow-auto flex-shrink-0 w-1/4 border-l border-secondary bg-emerald-900 max-sm:hidden whitespace-break-spaces"
-    >
-      <h1 class="text-5xl mb-0 text-primary">
-        {{ allBooks[activeIndex]?.title }}
-      </h1>
-      <div class="flex flex-col gap-5 mt-12">
-        <div
-          class="w-[300px] h-[275px] rounded-lg bg-secondary text-primary flex items-center justify-center text-center"
-        >
-          {{ allBooks[activeIndex]?.author_name?.slice(0, 3).join(", ") }}
-        </div>
+      <div class="h-full w-full">
+        <TokSlider
+          :books="allBooks"
+          :fetch-next-page="fetchNextPage"
+          @slide-change="handleSlideChange"
+          :class="cn({ 'opacity-0': status === 'idle' })"
+        />
       </div>
     </div>
+    <DesktopSidebar :reviews="[]" />
   </div>
+  <MobileSidebar :reviews="[]" />
 </template>
 
 <script setup lang="ts">
@@ -63,6 +51,8 @@ import { ref } from "vue";
 import { booksAPI } from "~/api/books";
 import { cn } from "~/theme";
 import { type Book } from "~/types/books.types";
+import DesktopSidebar from "~/components/Sidebar/DesktopSidebar.vue";
+import MobileSidebar from "~/components/Sidebar/MobileSidebar.vue";
 
 const activeIndex = ref(0);
 
