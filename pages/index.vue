@@ -13,7 +13,7 @@
       class="rounded-xl p-5 h-11/12 overflow-hidden w-3/12 bg-green-900 max-sm:hidden transition-all duration-300 ease-in-out"
     >
       <div class="bg-bg">
-        <h1 class="text-5xl mb-0 z-50 text-primary font-bold">БукТок</h1>
+        <h1 class="text-5xl mb-0 z-50 text-primary font-bold">Буклет</h1>
         <h1
           v-if="status === 'success' || status === 'pending'"
           class="text-base mt-4 mb-0 text-primary"
