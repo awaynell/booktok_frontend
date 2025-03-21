@@ -84,7 +84,7 @@ watch(
     if (isOpen) {
       const element = document.querySelector('#mobile_sidebar');
       closeOnDrag(element);
-      gsap.to(sidebarRef.value, { y: 0, duration: 0.15, ease: 'power2.out' });
+      gsap.to(sidebarRef.value, { y: 50, duration: 0.15, ease: 'power2.out' });
     } else {
       // Анимация скрытия
       gsap.to(sidebarRef.value, {
@@ -102,12 +102,12 @@ const closeOnDrag = (element: HTMLElement) => {
   Draggable.create(element, {
     type: 'y',
     bounds: {
-      minY: 100,
-      maxY: window.innerHeight * 0.8,
+      minY: 50,
+      maxY: window.innerHeight * 0.3,
     },
-    edgeResistance: 0.8,
-    onDragEnd: (e) => {
-      if (e.y > window.innerHeight * 0.4) {
+    edgeResistance: 1,
+    onDragEnd: function () {
+      if (this.y > window.innerHeight * 0.1) {
         store.setSidebarIsOpen(false);
       }
     },
