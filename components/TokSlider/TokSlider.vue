@@ -8,7 +8,7 @@
     class="absolute top-0 right-0 w-2/4 h-[250px] bg-red-500 opacity-1 blur-3xl transition-all duration-300 ease-in-out"
   ></span>
   <swiper
-    class="rounded-xl transition-all duration-300 ease-in-out h-full w-full"
+    class="rounded-xl transition-all duration-300 ease-in-out w-full h-[calc(100vh-150px)]"
     direction="vertical"
     :modules="modules"
     :slides-per-view="1"

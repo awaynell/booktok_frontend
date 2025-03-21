@@ -1,1 +1,27 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .main_container {
+    max-width: 1150px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+html.dark body {
+  background-color: #19161c;
+}
+
+body {
+  background-color: #dbcab3;
+}
+
+* {
+  transition: all 0.25s ease;
+}

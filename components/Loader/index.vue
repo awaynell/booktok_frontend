@@ -16,10 +16,14 @@
   perspective: 67px;
 }
 
+html.dark .loader div {
+  background: #fff;
+}
+
 .loader div {
   width: 100%;
   height: 100%;
-  background: #fff;
+  background: #000;
   position: absolute;
   left: 50%;
   transform-origin: left;

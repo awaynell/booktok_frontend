@@ -1,5 +1,5 @@
 <template>
-  <div class="p-5 rounded-lg absolute bottom-0 z-20 w-full bg-emerald-900/80">
+  <div class="p-5 rounded-lg absolute bottom-0 z-20 w-full bg-slate-900/80">
     <p>Название: {{ book.title }}</p>
     <p>Автор: {{ book.author_name?.slice(0, 3).join(", ") }}</p>
   </div>

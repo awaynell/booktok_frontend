@@ -1,7 +1,7 @@
 <template>
   <div class="flex h-full">
     <div
-      class="h-full w-full relative rounded-xl overflow-hidden border-2 border-emerald-300 min-w-3/4"
+      class="h-full w-full relative rounded-xl overflow-hidden min-w-3/4"
       :id="`book_slide_${idx}`"
     >
       <template v-if="book.cover_i">
@@ -18,7 +18,7 @@
               'w-full h-full rounded-xl object-contain transition-all duration-300 ease-in-out',
               {
                 'opacity-0': !imgLoadedState[book.cover_i],
-              }
+              },
             )
           "
           :src="`https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`"
@@ -36,25 +36,32 @@
       />
       <BookInfo :book="book" v-if="imgLoadedState[book.cover_i]" />
     </div>
-    <div class="self-center p-2 cursor-pointer" @click="slideOnClick">
+    <div
+      class="self-center p-2 cursor-pointer text-stone-800 dark:text-slate-200"
+      @click="slideOnClick"
+    >
       <CommentIcon />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Swiper from "swiper";
-import { watch, ref, reactive, nextTick } from "vue";
-import type { PropType } from "vue";
-import { cn } from "~/theme";
-import { type Book } from "~/types/books.types";
-import { shakeSlide } from "../utils/shakeSlide";
-import BookInfo from "./BookInfo.vue";
-import CommentIcon from "~/components/Icons/CommentIcon.vue";
-import { useSidebarStore } from "~/stores/sidebarStore";
+import Swiper from 'swiper';
+
+import { nextTick, reactive, ref, watch } from 'vue';
+import type { PropType } from 'vue';
+
+import CommentIcon from '~/components/Icons/CommentIcon.vue';
+
+import { useSidebarStore } from '~/stores/sidebarStore';
+import { cn } from '~/theme';
+import { type Book } from '~/types/books.types';
+
+import { shakeSlide } from '../utils/shakeSlide';
+import BookInfo from './BookInfo.vue';
 
 const props = defineProps({
-  swiperInstance: { type: Swiper, required: true },
+  swiperInstance: { type: Object as Swiper, required: true },
   activeIndex: { type: Number, required: true },
   book: { type: Object as PropType<Book>, required: true },
   idx: { type: Number, required: true },
