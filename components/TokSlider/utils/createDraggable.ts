@@ -12,87 +12,105 @@ export const createDraggable = (
   const element = document.querySelector(
     `#book_slide_${index}`
   ) as HTMLDivElement;
-  const container = document.querySelector("#container") as HTMLDivElement;
-  const threshold = window.innerWidth * 0.07;
-  if (!element || !container) return;
+  const greenLight = document.querySelector("#greenLight") as HTMLSpanElement;
+  const redLight = document.querySelector("#redLight") as HTMLSpanElement;
 
-  Draggable.create(element, {
-    type: "x",
-    inertia: false,
-    bounds: {
-      minX: -window.innerWidth * 0.8,
-      maxX: window.innerWidth * 0.8,
-    },
-    edgeResistance: 0.8,
-    onPress() {
-      gsap.set(element, { transition: "none" });
-    },
-    onDrag() {
-      // Добавляем вращение при движении
-      const rotation = this.x * 0.1;
-      gsap.set(element, { rotation, force3D: true });
+  if (!element || !greenLight || !redLight) return;
 
-      // Меняем фон при выходе за пороговые значения
-      const opacity = 1 - Math.abs(this.x) / (window.innerWidth * 0.4);
-      gsap.set(element, { opacity });
+  const threshold = window.innerWidth * 0.15;
+  let draggableInstance: Draggable;
 
-      if (this.x > threshold) {
-        container.style.background = "rgba(0, 200, 0, 0.5)";
-      } else if (this.x < -threshold) {
-        container.style.background = "rgba(200, 0, 0, 0.5)";
-      } else {
-        container.style.background = "transparent";
-      }
-    },
-    onDragEnd() {
-      // Определяем направление свайпа по позиции и скорости
-      if (this.x > threshold) {
-        swipeRight();
-        goToNextSlide(swiper);
-      } else if (this.x < -threshold) {
-        swipeLeft();
-        goToNextSlide(swiper);
-      }
-      resetPosition();
+  const resetLight = () => {
+    greenLight.style.opacity = "0";
+    redLight.style.opacity = "0";
+  };
 
-      function swipeRight() {
-        gsap.to(element, {
-          x: window.innerWidth * 1.5,
-          rotation: 25,
-          opacity: 0,
-          duration: 0.4,
-          onComplete: () => {
-            onSwipe?.("right");
-          },
+  const resetPosition = () => {
+    // Останавливаем все текущие анимации перед сбросом позиции
+    gsap.killTweensOf(element);
+    gsap.to(element, {
+      x: 0,
+      y: 0,
+      rotation: 0,
+      opacity: 1,
+      duration: 0.5,
+      ease: "power2.out",
+      overwrite: "auto", // Автоматически перезаписывает конфликтующие свойства
+    });
+  };
+
+  if (element) {
+    // Уничтожаем предыдущий экземпляр Draggable, если существует
+    if ((element as any)._gsapDraggable) {
+      (element as any)._gsapDraggable.kill();
+    }
+
+    draggableInstance = Draggable.create(element, {
+      type: "x",
+      inertia: false,
+      bounds: {
+        minX: -window.innerWidth * 0.8,
+        maxX: window.innerWidth * 0.8,
+      },
+      edgeResistance: 0.8,
+      onPress() {
+        // Останавливаем все анимации при начале перетаскивания
+        gsap.killTweensOf(element);
+        gsap.set(element, { transition: "none", overwrite: "auto" });
+      },
+      onDrag() {
+        const rotation = this.x * 0.1;
+        const opacity = 1 - Math.abs(this.x) / (window.innerWidth * 0.4);
+
+        // Используем быстрый set вместо анимации
+        gsap.set(element, {
+          rotation,
+          opacity,
+          overwrite: "auto",
         });
-      }
 
-      function swipeLeft() {
-        gsap.to(element, {
-          x: -window.innerWidth * 1.5,
-          rotation: -25,
-          opacity: 0,
-          duration: 0.4,
-          onComplete: () => {
-            onSwipe?.("left");
-          },
-        });
-      }
+        if (this.x > threshold) {
+          greenLight.style.opacity = "1";
+        } else if (this.x < -threshold) {
+          redLight.style.opacity = "1";
+        } else {
+          resetLight();
+        }
+      },
+      onDragEnd() {
+        const isRightSwipe = this.x > threshold;
+        const isLeftSwipe = this.x < -threshold;
 
-      function resetPosition() {
-        gsap.to(element, {
-          x: 0,
-          y: 0,
-          rotation: 0,
-          opacity: 1,
-          background: "transparent",
-          duration: 0.5,
-          ease: "power2.out",
-        });
-        container.style.background = "transparent";
-      }
-    },
-  });
+        if (isRightSwipe || isLeftSwipe) {
+          gsap.killTweensOf(element);
+          const targetX = isRightSwipe
+            ? window.innerWidth * 1.5
+            : -window.innerWidth * 1.5;
+          const rotation = isRightSwipe ? 25 : -25;
+
+          gsap.to(element, {
+            x: targetX,
+            rotation,
+            opacity: 0,
+            duration: 0.4,
+            onComplete: () => {
+              onSwipe?.(isRightSwipe ? "right" : "left");
+              resetLight();
+              resetPosition();
+              goToNextSlide(swiper);
+            },
+            overwrite: "auto",
+          });
+        } else {
+          resetPosition();
+          resetLight();
+        }
+      },
+    })[0] as Draggable;
+
+    // Сохраняем ссылку на экземпляр Draggable
+    (element as any)._gsapDraggable = draggableInstance;
+  }
 };
 
 const goToNextSlide = (swiperInstance: Swiper) => {

@@ -3,11 +3,10 @@
     :class="
       cn(
         {
-          'translate-x-0 opacity-100': store.isOpen,
-          '-translate-x-[-9999px] opacity-0 absolute left-[1408px]':
-            !store.isOpen,
+          'translate-x-0 opacity-100 z-20': store.isOpen,
+          'translate-x-full opacity-0 -z-20': !store.isOpen,
         },
-        'w-3/12 h-11/12 bg-emerald-900 whitespace-break-spaces max-md:hidden',
+        'w-full flex-1/5 h-11/12 bg-emerald-900 whitespace-break-spaces max-md:hidden',
         'transition-all duration-300 ease-in-out',
         'rounded-2xl p-5 mr-5'
       )

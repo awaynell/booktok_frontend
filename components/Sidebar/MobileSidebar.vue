@@ -18,7 +18,7 @@
       :class="
         cn(
           'fixed inset-x-0 bottom-0 z-50',
-          'h-2/4 bg-emerald-900 rounded-t-xl p-4',
+          'h-3/4 bg-emerald-900 rounded-t-xl p-4',
           'transform transition-transform duration-300 ease-in-out ml-2 mr-2',
           {
             'translate-y-1/6': store.isOpen,

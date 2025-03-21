@@ -1,11 +1,16 @@
 <template>
   <div
-    :class="cn('relative h-screen flex transition-all duration-300 ease-in-out',
-     'text-white items-center gap-10 bg-emerald-700', 'max-md:w-full')" 
+    :class="
+      cn(
+        'relative h-screen flex transition-all duration-300 ease-in-out',
+        'text-white items-center gap-10  max-w-[1440px] m-auto',
+        'max-md:w-full'
+      )
+    "
   >
     <!-- Левая панель -->
     <div
-      class="rounded-xl p-5 h-11/12 overflow-hidden w-3/12 bg-green-900 max-sm:hidden transition-all duration-300 ease-in-out ml-5"
+      class="rounded-xl p-5 h-11/12 overflow-hidden w-3/12 bg-green-900 max-sm:hidden transition-all duration-300 ease-in-out"
     >
       <div class="bg-bg">
         <h1 class="text-5xl mb-0 z-50 text-primary font-bold">БукТок</h1>
@@ -26,20 +31,19 @@
     </div>
 
     <!-- Слайдер -->
-    <div :class="cn('flex w-5/12 h-11/12 transition-all duration-300 ease-in-out', 
-      'max-md:w-full max-md:mr-2 max-md:ml-2'
-    )""> 
-      <div v-if="status === 'idle'">
-        <Loader />
-      </div>
-      <div class="h-full w-full">
-        <TokSlider
-          :books="allBooks"
-          :fetch-next-page="fetchNextPage"
-          @slide-change="handleSlideChange"
-          :class="cn({ 'opacity-0': status === 'idle' })"
-        />
-      </div>
+    <div
+      :class="
+        cn(
+          'flex w-5/12 h-11/12 transition-all duration-300 ease-in-out',
+          'max-md:w-full max-md:mr-2 max-md:ml-2'
+        )
+      "
+    >
+      <TokSlider
+        :books="allBooks"
+        :fetch-next-page="fetchNextPage"
+        @slide-change="handleSlideChange"
+      />
     </div>
     <DesktopSidebar :reviews="[]" />
   </div>
@@ -60,7 +64,7 @@ const allBooks = reactive<Book[]>([]);
 const page = ref(1);
 const limit = 15;
 
-const { status } = await booksAPI.getBooksV2(page, limit, allBooks);
+const { status } = await booksAPI.getBooks(page, limit, allBooks);
 
 async function fetchNextPage() {
   page.value += 1;

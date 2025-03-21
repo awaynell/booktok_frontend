@@ -1,44 +1,42 @@
 <template>
-  <div
-    class="h-full relative rounded-xl border-2 border-gray-200 overflow-hidden"
-    :id="`book_slide_${idx}`"
-  >
-    <template v-if="book.cover_i">
-      <div
-        v-if="!imgLoadedState[book.cover_i]"
-        class="w-full h-full flex justify-center items-center absolute top-0 left-0"
-      >
-        <Loader />
-      </div>
+  <div class="flex h-full">
+    <div
+      class="h-full w-full relative rounded-xl overflow-hidden border-2 border-emerald-300 min-w-3/4"
+      :id="`book_slide_${idx}`"
+    >
+      <template v-if="book.cover_i">
+        <div
+          v-if="!imgLoadedState[book.cover_i]"
+          class="w-full h-full flex justify-center items-center absolute top-0 left-0"
+        >
+          <Loader />
+        </div>
 
+        <NuxtImg
+          :class="
+            cn(
+              'w-full h-full rounded-xl object-contain transition-all duration-300 ease-in-out',
+              {
+                'opacity-0': !imgLoadedState[book.cover_i],
+              }
+            )
+          "
+          :src="`https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`"
+          loading="lazy"
+          @load="imgLoadHandler(book.cover_i)"
+        />
+      </template>
+
+      <!-- Fallback для книг без обложки -->
       <NuxtImg
-        :class="
-          cn(
-            'w-full h-full rounded-xl object-cover transition-all duration-300 ease-in-out',
-            {
-              'opacity-0': !imgLoadedState[book.cover_i],
-            }
-          )
-        "
-        :src="`https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`"
-        loading="lazy"
+        v-else
+        class="w-full h-full object-cover"
+        src="https://placehold.co/1000x1000/black/17"
         @load="imgLoadHandler(book.cover_i)"
       />
-    </template>
-
-    <!-- Fallback для книг без обложки -->
-    <NuxtImg
-      v-else
-      class="w-full h-full object-cover"
-      src="https://placehold.co/1000x1000/black/17"
-      @load="imgLoadHandler(book.cover_i)"
-    />
-    <BookInfo :book="book" v-if="imgLoadedState[book.cover_i]" />
-    <div
-      class="absolute right-2 top-1/2 z-20 p-2 cursor-pointer"
-      v-if="imgLoadedState[book.cover_i]"
-      @click="slideOnClick"
-    >
+      <BookInfo :book="book" v-if="imgLoadedState[book.cover_i]" />
+    </div>
+    <div class="self-center p-2 cursor-pointer" @click="slideOnClick">
       <CommentIcon />
     </div>
   </div>
